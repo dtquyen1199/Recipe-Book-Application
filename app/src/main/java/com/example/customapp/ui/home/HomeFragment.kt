@@ -4,13 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.*
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -29,13 +24,9 @@ class HomeFragment : Fragment() {
 
     var db = DBHelper
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
-    //ex 2 starts: update the adapter instead of recreating one every time
     lateinit var recipeListRecView :RecyclerView
-    //ex 2 ends
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,13 +34,16 @@ class HomeFragment : Fragment() {
     ): View {
         val homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        recipeListRecView = root.findViewById<RecyclerView>(R.id.recipelist)
 
+
+        recipeListRecView = root.findViewById<RecyclerView>(R.id.recipelist)
         recipeListRecView.adapter = RecipeListAdapter()
         recipeListRecView.layoutManager = LinearLayoutManager(activity)
+
+        //registerForContextMenu(recipeListRecView)
+
 
         /*
         homeViewModel.liveDataRecipes.observe(viewLifecycleOwner){
@@ -92,6 +86,11 @@ class HomeFragment : Fragment() {
          */
         return root
     }
+
+
+
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -119,11 +119,9 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         values.put(DESC_COL, userInputRecipe.desc)
 
         //implement this
-        values.put(INGR_COL, "")
-        values.put(STEP_COL, "")
-        values.put(TIME_COL, "")
-
-
+        values.put(INGR_COL, userInputRecipe.ingr)
+        values.put(STEP_COL, userInputRecipe.step)
+        values.put(TIME_COL, userInputRecipe.time)
 
         // here we are creating a
         // writable variable of
@@ -189,11 +187,13 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         //values.put(NAME_COL, recipe.name)
         values.put(DESC_COL, recipe.desc)
         val db = this.writableDatabase
-        db.update(TABLE_NAME, values, "$NAME_COL = ?", arrayOf(recipe.name))
+        db.update(TABLE_NAME, values, "$ID_COL = ?", arrayOf(recipe.id.toString()))
     }
 
     fun delete(recipe : Recipe){
 
+        val db = this.writableDatabase
+        db.delete(TABLE_NAME, "$ID_COL = ?", arrayOf(recipe.id.toString()))
     }
 
     companion object{

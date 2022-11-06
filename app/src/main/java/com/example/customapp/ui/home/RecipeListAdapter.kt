@@ -5,11 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,11 +21,9 @@ import com.example.customapp.*
 import com.google.android.material.internal.ContextUtils.getActivity
 import java.security.AccessController.getContext
 
-//class RecipeListAdapter() : RecyclerView.Adapter<RecipeListAdapter.ViewHolder>() {
 
-//ex2: update the adapter
 class RecipeListAdapter() : RecyclerView.Adapter<RecipeListAdapter.ViewHolder>() {
-//ex2 ends
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view = layoutInflater.inflate(R.layout.recipe_layout, parent, false) as View
@@ -61,6 +58,5 @@ class RecipeListAdapter() : RecyclerView.Adapter<RecipeListAdapter.ViewHolder>()
         }
 
     }
-
 
 }

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">CustomApp</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Recipes</string>
+    <string name="title_dashboard">Pantry</string>
+    <string name="title_notifications">Shopping List</string>
+    <string name="continue_editing">Continue Editing</string>
+    <string name="discard_edit">Discard Edit</string>
 </resources>
