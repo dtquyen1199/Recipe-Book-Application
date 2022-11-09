@@ -9,25 +9,24 @@ object Recipes {
         return recipes.size
     }
 
-
-    /*
-    fun update(item: Recipe){
-        for (var existingRecipe : Recipe in recipes){
-            if (existingRecipe.id == item.id){
-                existingRecipe = item
-            }
-        }
-
-        if (true){
-            //if item id already exist in here
-            item
-        }else{
-            //outside of range - add to this.
-        }
-
+    fun add(item: Recipe){
+        recipes.add(item)
     }
 
-     */
+    fun update(item: Recipe){
+        for (existingRecipe : Recipe in recipes){
+            if (existingRecipe.id == item.id){
+                existingRecipe.name = item.name
+                existingRecipe.desc = item.desc
+                existingRecipe.ingr = item.ingr
+                existingRecipe.step = item.step
+                existingRecipe.time = item.time
+            }
+        }
+    }
+    fun delete(item: Recipe) {
+        recipes.remove(item)
+    }
 }
 
 

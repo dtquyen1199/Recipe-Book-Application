@@ -15,11 +15,7 @@ import com.example.customapp.databinding.FragmentShoppingListBinding
 class ShoppingListFragment : Fragment() {
 
     private var _binding: FragmentShoppingListBinding? = null
-
-
     lateinit var ingredientList : List<String>
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(

@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -21,12 +22,28 @@ import com.google.android.material.snackbar.Snackbar
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-
     var db = DBHelper
-
     private val binding get() = _binding!!
-
     lateinit var recipeListRecView :RecyclerView
+    lateinit var root : View
+
+    lateinit var fab: View
+    val resultContract =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val intent = result.data
+            val item = intent?.getParcelableExtra<Recipe>("recipe")
+            if (item != null){
+                when (result.resultCode) {
+                    //C(R)UD
+                    1 -> addItem(item)
+                    3 -> updateItem(item)
+                    4 -> deleteItem(item)
+                    else -> {
+                    }
+                }
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,66 +51,46 @@ class HomeFragment : Fragment() {
     ): View {
         val homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        root = binding.root
+
+        fab = root.findViewById(com.example.customapp.R.id.fab)
+
+        fab.setOnClickListener { view ->
+            Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                .setAction("Action", null)
+                .show()
+            val activity = root!!.context as AppCompatActivity
+            val intent = Intent(activity, RecipeDetailActivity::class.java).apply{
+                putExtra("recipe",Recipe())
+            }
+            resultContract.launch(intent)
+        }
 
         recipeListRecView = root.findViewById<RecyclerView>(R.id.recipelist)
-        recipeListRecView.adapter = RecipeListAdapter()
+        recipeListRecView.adapter = RecipeListAdapter(resultContract)
         recipeListRecView.layoutManager = LinearLayoutManager(activity)
-
-        //registerForContextMenu(recipeListRecView)
-
-
-        /*
-        homeViewModel.liveDataRecipes.observe(viewLifecycleOwner){
-
-            /*
-            //here is where you update the value :) but you can't, cuz it's not just 1 or 2 values that you can update straight away
-            // i need to overcome this - by potentially make
-
-            //Apporach 1:
-            - Notify the adapter of every changes.
-            - Question: Does the Recipes singleton change with the thing? or no??
-             */
-            recipeListAdapter.notifyDataSetChanged()
-        }
-
-         */
-
-        //This seems cool but idk how to use it yet
-        /*val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-         */
-
-        /*
-        val image: ImageView = binding.image
-        image.setOnClickListener(){
-            val intent = Intent(activity,RecipeDetailActivity::class.java).apply{
-                putExtra("recipe",Recipes.recipes[0])
-            }
-            startActivity(intent)
-        }
-
-        if (Recipes.recipes.isNotEmpty()) {
-            val name: TextView = binding.name
-            name.text = Recipes.recipes[0].name
-            val desc: TextView = binding.desc
-            desc.text = Recipes.recipes[0].desc
-        }
-         */
         return root
     }
-
-
-
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun addItem(item: Recipe){
+        Recipes.add(item)
+        recipeListRecView.adapter?.notifyItemInserted(Recipes.getCount())
+    }
+
+    private fun deleteItem(item: Recipe){
+        Recipes.delete(item)
+        recipeListRecView.adapter?.notifyDataSetChanged()
+    }
+
+    private fun updateItem(item: Recipe) {
+        Recipes.update(item)
+        recipeListRecView.adapter?.notifyDataSetChanged()
     }
 }

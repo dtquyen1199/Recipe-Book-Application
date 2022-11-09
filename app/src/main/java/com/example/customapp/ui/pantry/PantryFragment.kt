@@ -12,11 +12,7 @@ import com.example.customapp.databinding.FragmentPantryBinding
 class PantryFragment : Fragment() {
 
     private var _binding: FragmentPantryBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,7 +30,6 @@ class PantryFragment : Fragment() {
         }
         return root
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

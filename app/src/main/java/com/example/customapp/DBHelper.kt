@@ -13,20 +13,16 @@ import com.google.android.material.internal.ContextUtils.getActivity
 
 class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
+        override fun onCreate(db: SQLiteDatabase) {
+            val query0 = ("CREATE TABLE " + TABLE_NAME + " ("
+                    + ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + NAME_COL + " TEXT, "
+                    + DESC_COL + " TEXT, "
+                    + INGR_COL + " TEXT, "
+                    + STEP_COL + " TEXT, "
+                    + TIME_COL + " INTEGER" + ")")
 
-    // below is the method for creating a database by a sqlite query
-    override fun onCreate(db: SQLiteDatabase) {
-        // below is a sqlite query, where column names
-        // along with their data types is given
-        val query0 = ("CREATE TABLE " + TABLE_NAME + " ("
-                + ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + NAME_COL + " TEXT, "
-                + DESC_COL + " TEXT, "
-                + INGR_COL + " TEXT, "
-                + STEP_COL + " TEXT, "
-                + TIME_COL + " INTEGER" + ")")
-
-        db.execSQL(query0)
+            db.execSQL(query0)
 
         //$ID_COL, $NAME_COL, $DESC_COL, $INGR_COL, $STEP_COL, $TIME_COL
 
@@ -62,7 +58,6 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         db.execSQL(insertQuery1)
 
-
         val ingr2 = "10 pounds beef bones\n" +
                 "2 medium yellow onions - peel and quarter\n" +
                 "2 whole heads garlic - halved crosswise\n" +
@@ -84,10 +79,8 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 "Season to taste. When it comes to Pho, you do you. Add more salt, more sugar, more fish sauce, etc."
 
         val insertQuery2 = ("INSERT INTO $TABLE_NAME ($ID_COL, $NAME_COL, $DESC_COL, $INGR_COL, $STEP_COL, $TIME_COL) VALUES (2,'Pho','Hearty Recipe for a winter day','$ingr2','$step2',120);")
-        //val insertQuery2 = ("INSERT INTO $TABLE_NAME ($NAME_COL, $DESC_COL) VALUES ('Pho','Hearty Recipe for a winter day');")
         db.execSQL(insertQuery2)
     }
-
 
     fun count(){
         val db = this.readableDatabase
@@ -99,78 +92,26 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL("DROP TABLE IF EXISTS " + "recipe")
         onCreate(db)
     }
-
-
-
-
-    // This method is for adding data in our database
     fun addRecipe(userInputRecipe : Recipe){
-
-        // below we are creating
-        // a content values variable
         val values = ContentValues()
-
-        // we are inserting our values
-        // in the form of key-value pair
-
-
-        //$ID_COL, $NAME_COL, $DESC_COL, $INGR_COL, $STEP_COL, $TIME_COL
         values.put(NAME_COL, userInputRecipe.name)
         values.put(DESC_COL, userInputRecipe.desc)
-
-        //implement this
         values.put(INGR_COL, userInputRecipe.ingr)
         values.put(STEP_COL, userInputRecipe.step)
         values.put(TIME_COL, userInputRecipe.time)
-
-        // here we are creating a
-        // writable variable of
-        // our database as we want to
-        // insert value in our database
         val db = this.writableDatabase
-
-        // all values are inserted into database
         val result = db.insert(TABLE_NAME, null, values)
-
-
         if (result == -1.toLong()){
-            //What do i pass for context here?
-            //Toast.makeText(this,"Failed", Toast.LENGTH_SHORT).show()
         }else{
-
         }
-
-        // at last we are
-        // closing our database
         db.close()
     }
 
-    // below method is to get
-    // all data from our database
-    fun getName(): Cursor? {
-
-        // here we are creating a readable
-        // variable of our database
-        // as we want to read value from it
-        val db = this.readableDatabase
-        // below code returns a cursor to
-        // read data from the database
-
-
-
-        return db.rawQuery("SELECT * FROM recipe", null)
-
-    }
-
-
-    //return all entries as a list
     fun readData(): MutableList<Recipe>{
         var list : MutableList<Recipe> = ArrayList()
         val db = this.readableDatabase
-
         val query = "Select * from " + TABLE_NAME
         val result = db.rawQuery(query, null)
-        //if cursors not null and has at least 1 val
         if(result.moveToFirst()){
             do {
                 var recipe = Recipe(result.getInt(0), result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getInt(5) )
@@ -184,44 +125,29 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     fun update(recipe : Recipe){
         val values = ContentValues()
-        //values.put(NAME_COL, recipe.name)
+        values.put(NAME_COL, recipe.name)
         values.put(DESC_COL, recipe.desc)
+        values.put(INGR_COL, recipe.ingr)
+        values.put(STEP_COL, recipe.step)
+        values.put(TIME_COL, recipe.time)
         val db = this.writableDatabase
         db.update(TABLE_NAME, values, "$ID_COL = ?", arrayOf(recipe.id.toString()))
     }
 
     fun delete(recipe : Recipe){
-
         val db = this.writableDatabase
         db.delete(TABLE_NAME, "$ID_COL = ?", arrayOf(recipe.id.toString()))
     }
 
     companion object{
-        // here we have defined variables for our database
-
-        // below is variable for database name
         private val DATABASE_NAME = "RECIPES_APP_DB"
-
-        // below is the variable for database version
         private val DATABASE_VERSION = 1
-
-        // below is the variable for table name
         val TABLE_NAME = "Recipe"
-
-        // below is the variable for id column
         val ID_COL = "id"
-
-        // below is the variable for name column
         val NAME_COL = "name"
-
-        // below is the variable for age column
         val DESC_COL = "description"
-
-
         val TIME_COL = "time"
-
         val INGR_COL = "ingredients"
-
         val STEP_COL = "steps"
     }
 }
