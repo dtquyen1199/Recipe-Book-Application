@@ -4,7 +4,7 @@ Author: Thiem Quyen
 ## Project Description
 Users can create, read, update and delete recipes in this app. In addition, it can generate a shopping list from a recipe.  
 
-The project includes, but not limited to:  
+The project includes, but is not limited to:  
 - SQLite DB  
 - Fragments  
 - Recycler View  
